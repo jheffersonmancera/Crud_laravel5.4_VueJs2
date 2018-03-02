@@ -16,11 +16,15 @@ new Vue({
 		},
 
 		deleteKeep: function(keep){ //*8app.js *9app.js 
-			//alert(keep.id);
-			var url = 'tasks/'+keep.id;//*10app.js
-			axios.delete(url).then(response=>{//*11app.js
-				this.getKeeps();//*12app.js
-			});
+			//alert(keep.id);//prueba
+				if (confirm("Seguro de eliminar esta tarea?")) {//*14app.js
+					var url = 'tasks/'+keep.id;//*10app.js
+					axios.delete(url).then(response=>{//*11app.js
+					this.getKeeps();//*12app.js
+					toastr.success('Se eliminó la tarea No.'+keep.id);//*13app.js
+					});
+				}return false;
+			
 		}
 
 

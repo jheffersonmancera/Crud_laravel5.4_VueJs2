@@ -226,3 +226,53 @@ __________/js/app.js___________________
  *10app.js: guardamos en la variable url la ruta para pedirle a laravel que elimine un elemento. Esta ruta la sabemos gracias a ejecutar el comando php artisan route:list donde encontramos el formato de la ruta y el metodo que se debe usar. A la ruta concatenamos el id del elemento que queremos eliminar, el cual traemos en la variable keep. 
 *11app.js: le damos a axios el metodo delete y le pasamos como parametro la variable url que contiene la ruta que le pide a laravel la eliminacion del elemento. Luego axios nos devuelve una respuesta:
 *12app.js: En la respuesta llamamos de nuevo al metodo getKeeps(); con el fin de que refresque y renderize de nuevo todos los elementos de acuerdo al estado actual que cambió porque se hiso una eliminacion de un elemento. Al cargar el metodo getkeeps basicamente le estamos pidiendo que cargue de nuevo el arreglo keeps[]*1app.js para que quede de acuerdo al nuevo estado de la base de datos.
+
+__________PREPARAR ENTORNO PAR NOTIFICACIONES DESPUES DE ELIMINAR_____________________
+----------------------------------------------------------------------
+https://github.com/twbs/bootstrap/tree/v3.3.7/dist/js
+____________INSTALAR BOOTSTRAP_________________
+-Generar resources/assets/js/bootstrap.js
+https://raw.githubusercontent.com/twbs/bootstrap/v3.3.7/dist/js/bootstrap.js
+
+-Generar resources/assets/css/bootstrap.css
+https://raw.githubusercontent.com/twbs/bootstrap/v3.3.7/dist/css/bootstrap.css
+
+_____________INSTALAR JQUERY__________________
+-Generar resources/assets/js/jquery-3.3.1.js
+https://jquery.com/download/  ---->Download the uncompressed, development jQuery 3.3.1
+
+___________INSTALAR TOASTR_________________
+-Generar resources/assets/js/toastr.js
+https://raw.githubusercontent.com/CodeSeven/toastr/master/toastr.js
+
+-Generar resources/assets/css/toastr.css
+https://raw.githubusercontent.com/CodeSeven/toastr/master/build/toastr.css
+
+
+________________ACTUALIZAR WEBPACK______
+-Agregar las nuevas librerias a webpack en mix.scripts
+*1webpack.mix: jquery tiene mayor jerarquia entonces ira de primero
+*2webpack.mix: bootstrap depende de jquery por lo tanto ira de segundo
+*3webpack.mix: toastr depende de jquery por lo tanto ira por debajo
+*4webpack.mix: axios depende de VUE.js por lo tanto va por debajo
+
+____________________WEBPACK CSS___________
+Agregar estas lineas en mix:
+.styles([
+	'resources/assets/css/bootstrap.css',
+	'resources/assets/css/toastr.css',
+
+	],'public/css/app.css')
+*5webpack.mix: ruta de los archivos bootstrap que se mexclaran
+*6webpack.mix: ruta final donde se mexclaran todos los archivos de estilo
+
+____________app.blade.php___________________
+*2app.blade.php: el helper asset busca a partir de public, hacemos llamado del archivo css/app.css debido a que laravel mix a hecho la mezcla de todos los archivos correspondientes a estilo css dentro de este archivo, incluido bootstrap y el css para toastr
+
+- npm run dev
+------------------------------------------------------------------------------
+______FIN PREPARACION DE ENTORNO PARA NOTIFICACIONES DESPUES DE ELIMINAR____________
+
+_____________resources/js/app.js___________________
+*13app.js: llamamos a toastr con el metodo success que invocara un anuncio de exito y le mandamos como parametro un mensaje de exito. Esto lo ponemos despues de ejecutar el metodo getKeeps que provocara que se recargue la pagina con los elementos actuales
+*14app.js: confirm() para determinar si quiero eliminar 
