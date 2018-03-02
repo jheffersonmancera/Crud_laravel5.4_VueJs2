@@ -12399,19 +12399,29 @@ return /******/ (function(modules) { // webpackBootstrap
 //# sourceMappingURL=axios.map
 
 new Vue({
-	el: '#crud',
+	el: '#crud',//*7app.js
 	created: function(){
-		this.getKeeps();//*4
+		this.getKeeps();//*4app.js
 	},
 	data: {
-		keeps:[]//*1
+		keeps:[]//*1app.js
 	},
 	methods:{
-		getKeeps: function(){//*5
+		getKeeps: function(){//*5app.js
 			var urlKeeps = 'tasks';//*2
 			axios.get(urlKeeps).then(response =>{
 				this.keeps = response.data//*6
-			});//*3
+			});//*3app.js
+		},
+
+		deleteKeep: function(keep){ //*8app.js *9app.js 
+			//alert(keep.id);
+			var url = 'tasks/'+keep.id;
+			axios.delete(url).then(response=>{
+				this.getKeeps();
+			});
 		}
+
+
 	}
 });

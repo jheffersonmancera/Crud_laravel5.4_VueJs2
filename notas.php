@@ -182,25 +182,47 @@ ______________dashboard.blade.php__________________
 th columna
 tr fila resaltada
 td fila normal
-*2 se agrega un @ a las variables de vue.js
-
+*2dashboard.blade.php: se agrega un @ a las variables de vue.js, con esta variable estamos imprimiendo el arreglo que contiene vuejs para esa variable
+*3dashboard.blade.php: aqui se aprecia que la cantidad de columnas de la rejilla de bootstrap que ocupamos es 7 del maximo de 12 columnas que podemos usar
+*4dashboard.blade.php:  ocupamos solo 5 columnas para sumar a las 7 anteriores un total de 12
 ______________resources/assets/js/app.js_______________
+*7app.js este identificador corresponde al elemento html->*5dashboard.blade.php , pueden existir varios componentes de vuejs en una sola pagina html
 
-*1 se inicializa la llave donde se encapsulan todos los datos (tareas o keeps)
-*2 guarda la URI de la ruta task.index, mirar en php artisan route:list que coincida task con la uri
-*3 usamos axios.get, sabemos si se usa metodo get yendo a php artisan route:list e identificando el metodo para la ruta actual
-*3 this.keeps me guarda el contenido en *1
-*4 este metodo se activa en la etapa de creacion y ejecuta el metodo getKeeps()*5 el metodo getkeeps me hace la conecciony me guarda todos los keeps que estan en la base de datos y *6 me los pasa a el arreglo en data *1
+*1app.js se inicializa la llave donde se encapsulan todos los datos (tareas o keeps)
+
+*2app.js guarda la URI de la ruta task.index, mirar en php artisan route:list que coincida task con la uri
+
+*3app.js usamos axios.get, sabemos si se usa metodo get yendo a php artisan route:list e identificando el metodo para la ruta actual
+
+*3app.js this.keeps me guarda el contenido en *1app.js
+
+*4app.js: este metodo se activa en la etapa de creacion(existen varias etapas en el ciclo de vida de un objeto vue) y ejecuta el metodo getKeeps()*5app.js el metodo getkeeps me hace la conecciony me guarda todos los keeps que estan en la base de datos y *6 me los pasa a el arreglo en data *1
+
 -npm run dev para ajustar cambios en el app.js
 
 ______________dashboard.blade.php__________________
+*7dashboard.blade.php: v-for ejecuta un ciclo for, keep es una variable donde me ira almacenando cada una de las vueltas del ciclo, keeps es ese arreglo que contiene las tareas desde la base de datos.
 
-*4 keep: variable keeps: arreglo 
-*5 keep: nombre de la variable o elemento del arreglo. keep campo que contiene el nombre en el arreglo
-*6 keep: nombre de la variable o elemento del arreglo. id campo que contiene el id en el arreglo
+*8dashboard.blade.php: keep la variable resultante del ciclo en su posicion actual, id uno de los campos del arreglo
 
+*9dashboard.blade.php: keep la variable resultante del ciclo en su posicion actual, keep uno de los campos del arreglo, se usa un @ para diferenciar los {{}} de las entidades blade
+
+__________/js/app.js___________________
+-creamos el metodo deleteKeep para eliminar tareas:
+
+*8app.js: metodo para eliminar tareas.
+
+-npm run dev  cada vez que se hace un cambio en app.js
 
 	
+________dashboard.blade.php___________________
 
-
-
+*10dashboard.blade.php:  la directiva v-on:click detecta el evento click y ejecuta el metodo deleteKeep(), el parametro prevent evita que el navegador ejecute acciones adicionales despues de ejecutar el metodo deleteKeep, por ejemplo evita refrescar la pagina.
+deleteKeep(keep) le damos al metodo deletekeep el parametro keep que corresponde a la variable de la linea *7dashboard.blade.php
+y que contiene la información del elemento consultado por el ciclo for en su posicion actual
+__________/js/app.js___________________
+*9app.js: el parametro keep corresponde a la variable proveniente del ciclo v-for donde tendremos guardada la información del elemento que queremos eliminar
+ -npm run dev
+ *10app.js: guardamos en la variable url la ruta para pedirle a laravel que elimine un elemento. Esta ruta la sabemos gracias a ejecutar el comando php artisan route:list donde encontramos el formato de la ruta y el metodo que se debe usar. A la ruta concatenamos el id del elemento que queremos eliminar, el cual traemos en la variable keep. 
+*11app.js: le damos a axios el metodo delete y le pasamos como parametro la variable url que contiene la ruta que le pide a laravel la eliminacion del elemento. Luego axios nos devuelve una respuesta:
+*12app.js: En la respuesta llamamos de nuevo al metodo getKeeps(); con el fin de que refresque y renderize de nuevo todos los elementos de acuerdo al estado actual que cambió porque se hiso una eliminacion de un elemento. Al cargar el metodo getkeeps basicamente le estamos pidiendo que cargue de nuevo el arreglo keeps[]*1app.js para que quede de acuerdo al nuevo estado de la base de datos.

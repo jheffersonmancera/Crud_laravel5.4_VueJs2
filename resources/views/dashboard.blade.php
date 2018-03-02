@@ -3,11 +3,12 @@
 
 @section('content') <!-- *2 -->
 
-<div id="crud" class="row">
+<div id="crud" class="row"> <!-- *5dashboard.blade.php -->
+
 	<div class="col-xs-12">
 		<h1 class="page-header">CRUD Laravel y VUEjs</h1>
 	</div>
-	<div class="col-sm-7">
+	<div class="col-sm-7"> <!-- *3dashboard.blade.php -->	
 		<a href="#" class="btn btn-primary pull-right">Nueva Tarea</a>
 	
 	<table class="table table-hover table-striped">
@@ -22,17 +23,16 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr>
-				<td width="10px">1</td>
-				<td>Tarea 1</td>
+			<tr v-for="keep in keeps"> <!-- *7dashboard.blade.php  -->
+			
+				<td width="10px">@{{keep.id}}</td> <!-- *8dashboard.blade.php  -->
+				<td>@{{keep.keep}}</td><!-- *9dashboard.blade.php  -->
 				<td width="10px">
 					<a href="#" class="btn btn-warning btn-sm">Editar</a>
 				</td>
 				<td width="10px">
-					<a href="#" class="btn btn-danger btn-sm">Eliminar</a>
+					<a href="#" class="btn btn-danger btn-sm" v-on:click.prevent="deleteKeep(keep)">Eliminar</a><!-- *10dashboard.blade.php  -->
 				</td>
-
-
 
 			</tr>
 			
@@ -40,11 +40,9 @@
 		
 	</table>
 	</div>
-	<div class="col-sm-5">
-		<pre>
-			
-			@{{ $data}} <!-- *2 -->
-			
+	<div class="col-sm-5"> <!-- *4dashboard.blade.php -->
+		<pre>	
+			@{{ $data}} <!-- *2dashboard.blade.php -->
 		</pre>		
 	</div>
 	
