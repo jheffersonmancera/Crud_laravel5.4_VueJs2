@@ -25624,7 +25624,9 @@ new Vue({
 		this.getKeeps();//*4app.js
 	},
 	data: {
-		keeps:[]//*1app.js
+		keeps: [],//*1app.js
+		newKeep: '',//*18app.js
+		errors: []
 	},
 	methods:{
 		getKeeps: function(){//*5app.js
@@ -25644,6 +25646,25 @@ new Vue({
 					});
 				}return false;
 			
+		},
+
+		createKeep: function(){
+			var url = 'tasks';      //*15app.js
+			axios.post(url,{        //*16app.js
+				keep: this.newKeep  //*17app.js
+			}).then(response =>{	
+				this.getKeeps();	//*19app.js
+				toastr.success(this.newKeep+' creado con éxito');//*23app.js
+				this.newKeep='';	//*20app.js
+				this.errors=[];		//*21app.js
+				$('#create').modal('hide');//*22app.js
+				
+				
+				}).catch(error =>{
+				this.errors = error.response.data//*24app.js
+				});
+
+
 		}
 
 

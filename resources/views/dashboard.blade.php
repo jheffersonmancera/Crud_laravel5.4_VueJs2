@@ -9,7 +9,8 @@
 		<h1 class="page-header">CRUD Laravel y VUEjs</h1>
 	</div>
 	<div class="col-sm-7"> <!-- *3dashboard.blade.php -->	
-		<a href="#" class="btn btn-primary pull-right">Nueva Tarea</a>
+		<a href="#" class="btn btn-primary pull-right" data-toggle="modal" data-target="#create">Nueva Tarea</a><!-- *11dashboard.blade.php -->
+		
 	
 	<table class="table table-hover table-striped">
 
@@ -39,6 +40,7 @@
 		</tbody>
 		
 	</table>
+	@include('create') <!-- *12dashboard.blade.php -->
 	</div>
 	<div class="col-sm-5"> <!-- *4dashboard.blade.php -->
 		<pre>	

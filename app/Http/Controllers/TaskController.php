@@ -14,19 +14,11 @@ class TaskController extends Controller
      */
     public function index()
     {
-       $task = Task::get();//*2TaskController
+       $task = Task::orderBy('id','DESC')->get();//*2TaskController
         return $task;//*3TaskController
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+    //*7TaskController
 
     /**
      * Store a newly created resource in storage.
@@ -34,19 +26,19 @@ class TaskController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request) //*9TaskController
     {
-        //
+        $this ->validate($request,[         //*10TaskController
+            'keep' => 'required'            //*11TaskController
+        ]);
+
+        Task::create($request->all());             //*12TaskController
+        return;
     }
 
-   //*1TaskController
  
-    public function edit($id)
-    {
-        $task = Task::findOrFail($id);//*4TaskController
-        //Formulario
-        return $task;
-    }
+    //*8TaskController
+    
 
     /**
      * Update the specified resource in storage.

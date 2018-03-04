@@ -276,3 +276,76 @@ ______FIN PREPARACION DE ENTORNO PARA NOTIFICACIONES DESPUES DE ELIMINAR________
 _____________resources/js/app.js___________________
 *13app.js: llamamos a toastr con el metodo success que invocara un anuncio de exito y le mandamos como parametro un mensaje de exito. Esto lo ponemos despues de ejecutar el metodo getKeeps que provocara que se recargue la pagina con los elementos actuales
 *14app.js: confirm() para determinar si quiero eliminar 
+
+--------------------------------------------------------------------
+_______________________CREATE___________________________________
+--------------------------------------------------------------------
+_____________dashboard.blade.php___________________
+*11dashboard.blade.php: data-toggle="modal"-> activa la tecnología de ventanas modales
+data-target="#create"-> apunta al div create
+-Creamos la vista create.blade.php
+*12dashboard.blade.php: incluimos la vista create
+_______________create.blade.php____________________
+*1create.blade.php: class="modal fade" la clase bootstrap modal hace que solo aparezca el div en forma de ventana cuando se lo llame con un boton data-target y la clase fade hace que halla un pequeño efecto de desvanecido
+*2create.blade.php: modal-dialog clase de bottstrap que llama al tipo de modal que queremos
+*3create.blade.php: modal-content clase de bootstrap que  determina el contenido del modal
+*4create.blade.php: clase de bootstrap modal-header determina el encabezado del modal
+*5create.blade.php: clase de bootsatrap que da el cuerpo del modal
+
+__________________Task.php________________________
+-Habilitar los campos para guardar en el modelo
+*1Task.php: se agrega dentro del arreglo los campos que son autorizados para ser llenados por medio de formulario en la base de datos.
+
+______web.php___________
+*3routesweb: agregamos al except la ruta edit y create
+
+_____________TaskController.php___________________ 
+*7TaskController: elimino el metodo create() debido a que en este caso estamos usando un campo modal por medio de bootstrap como formulario de creacion.
+- Ir a rutas y agregar la exepcion de este metodo
+*8TaskController: elimino el metodo edit()
+
+*9TaskController: este metodo recibe todos los datos del formulario de creacion y los guarda en la variable $request
+
+*10TaskController: validamos que dentro de la variable request vengan los campos requeridos con contenido.
+
+*11TaskController: pasamos los campos requeridos como obligatorios
+
+*12TaskController: solicitamos que se cree una instancia nueva a partir del modelo Task y en el parametro le pasamos los campos para crear la nueva instancia de Task en el metodo all() hacemos que traiga todos los campos que estan en request pero el sistema solo tomara en cuenta los campos que esten calificados como fillable en el Modelo Task *1Task.php
+
+*6create.blade.php: El campo for="keep" se refiere al name del input
+*7create.blade.php: name="keep" nombre html del input 
+class="form-control" clase de bootstrap para determinar que hace parte de un formulario
+v-model="newKeep" : el nombre del modelo que usaremos para extraer la información que hay dentro del input o para actualizarla si es el caso desde el app de vue *16app.js
+****You can use the v-model directive to create two-way data bindings on form input and textarea elements. It automatically picks the correct way to update the element based on the input type. 
+**
+
+*15app.js: guardamos la url laravel de (route:list) para ejecutar el guardado de datos (store), usamos el metodo axios.post porque es el que nos muestra route:list para poder ejecutar el metodo store del controlador(*9TaskController) y el contenido "tasks" equivale a la url que muestra el route:list para el metodo store.
+
+*16app.js: llamamos a axios.post y le damos dos parametros, el primero es la url con el contenido de la ruta laravel.
+
+*17app.js:  el segundo parametro es la variable keep: y le pasamos el contenido de v-model="newKeep" que es la caja de texto (*7create.blade.php)
+
+_______________ejemplo de sintaxis axio.post___________
+axios.post('/user', {
+    firstName: 'Fred',
+    lastName: 'Flintstone'
+  })
+  .then(function (response) {
+    console.log(response);
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+  _____________________________
+*18app.js: declaramos la variable que usamos en el metodo create Keep
+*19app.js: ejecutamos el metodo getKeeps con el fin de actualizar el contenido de la lista con el nuevo elemento que se creo.
+*20app.js: Vaciamos la caja de texto
+*21app.js: vaciamos el arreglo de errores para que no siga apareciendo aun despues de que ya cumplimos las reglas
+*22app.js: llamamos el id del div "create" que vamos a desaparecer. ejecutamos el metodo modal('hide') que da la orden de esconder a un ventana con tecnología modal.
+*23app.js: llamamos a toastr.success que llamara una notificacion exitosa con el contenido del parametro
+*24app.js: de haber errores se llena el arreglo errors con el contenido de error.response.data que contiene todos los errores que nos devuelva laravel en la validacion del formulario.
+*8create.blade.php: con v-for hacemos un ciclo for para recorrer el arreglor de errores y los vamos captando en cada vuelta como la variable erro, la cual imprimimos en @{{error}}
+*9create.blade.php: v-on:submit.prevent="createKeep" al ser un formulario detecta la subida mediante el boton submit y ejecuta el metodo  createKeep
+prevent se usa para evitar que se recargue la pagina por si misma y deja que sea vue el que refresque los datos
+
+-------------------------------------------------

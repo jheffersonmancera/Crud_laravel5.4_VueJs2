@@ -14,4 +14,4 @@
 Route::get('/', function () {
     return view('dashboard');//*1routesweb
 });
-Route::resource('tasks', 'TaskController', ['except'=> 'show']);//*2routesweb
+Route::resource('tasks', 'TaskController', ['except'=> 'show', 'create', 'edit']);//*2routesweb //*3routesweb

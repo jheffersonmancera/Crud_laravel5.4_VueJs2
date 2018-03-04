@@ -18,7 +18,7 @@
     </head>
     <body>
         <div class="container">
-            
+             
 
                 @yield('content') <!-- *1 -->
                 
