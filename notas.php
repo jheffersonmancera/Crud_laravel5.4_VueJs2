@@ -349,3 +349,39 @@ axios.post('/user', {
 prevent se usa para evitar que se recargue la pagina por si misma y deja que sea vue el que refresque los datos
 
 -------------------------------------------------
+--------------------------------------------------------------------
+_______________________EDIT___________________________________
+--------------------------------------------------------------------
+-Creamos nuevo formulario para editar
+*1edit.blade.php: v-on:submit.prevent="updateKeep(fillKeep.id)" al detectar la accion de submit del formulario ejecuta el metodo updateKeep(fillKeep.id) en el parametro se pasara el id, contenido en el arreglo fillKeep:*25app.js  
+
+*13dashboard.blade.php: inclusion de la plantilla edit para que incluya el formulario de edicion
+*14dashboard.blade.php: v-on:click.prevent="editKeep(keep)": detectamos el click, y llamamos al metodo editKeep(keep) pasandolela variable keep correpondiente a *7dashboard.blade.php y que contiene toda la información del keep en la posicion actual del ciclo, dentro del metodo en el app.js usaremos esa variable para extraer el id o el keep actual
+*25app.js: variable usada en el metodo editKeep()
+*26app.js: el parametro keep es la variable que viene de *14dashboard.blade.php y trae todo el contenido del keep que esta devolviendo el ciclo for.
+
+*27app.js: llamamos dentro de la misma app con this. a la variable fillKeep y al campo id y le ponemos el valor del campo id de la variable keep que llego por el parametro de la funcion
+
+*39app.js: limpiamos el arreglo de errores por si en la edicion anterior quedo cargada con un error
+*28app.js: llenamos el valor del campo keep de la variabl fillKeep, que es un arreglo, con el contenido de keep.keep que proviene del ciclo for de la vista y nos llego por medio del parametro de la funcion editKeep
+USO DE JQUERY PARA HACER APARECER EL FORMULARIO EN PANTALLA
+*29app.js: jQuery llama al div con el id #edit y le dice al modal que se muestre mediante el comando show
+*2edit.blade.php: v-model="fillKeep.keep" la directiva v-model nos conecta con el arreglo  fillKeep*25app.js y el campo keep y pone la información actual del arreglo en el input para que podamos editarla
+
+*30app.js: determinamos la url apropiada para ejecutar el metodo update a traves de php artisan route:list que seria tasks/{task} 
+*31app.js: axios.put: el put lo determinamos con rout:list porque queremos ejecutar el metodo update del controlador y esto nos solicita el metodo put
+(url, this.fillKeep) como primer parametro pasamos la url que sirve para ejecutar el metodo update del controlador, como segundo parametro enviamos el arreglo que contiene los datos del campo de texto y el id, estos datos se actualizan en el arreglo fillKeep en tiempo real asi que mientras digitamos y modificamos un input la información esta al mismo tiempo conservandose en el arreglo, cuando ejecutamos axios.put(url,this.fillKeep) en ese momento se da la orden al controlador para que ejecute el metodo update y se lo alimenta con los parametros.
+.then(response =>{ si todo sale bien y no nos devuelve errores el controlador entonces continua el resto de la operacion
+*32app.js: ejecutamos el metodo getkeeps() para actualizar  y obtener todos los datos actualizados
+*33app.js: ponemos en blanco el arreglo 
+*34app.js: limpiamos el arreglo de errores
+*35app.js: escondemos el div edit que es un modal por medio de jQuery
+*36app.js: notificacion de actualizacion con toastr
+*37app.js: si el controlador en su metodo update no logra actualizar nos devolvera un error aqui lo capturamos
+*38app.js: llenamos el arreglo errors con la información que nos da el api de error de laravel, luego de que se llene ese arreglo aparecera visible el div de errores al ejecutarse este ciclo for *3edit.blade.php
+
+*13TaskController: los parametros para la actualizacion son entregados por axios.put  en *31app.js:
+*14TaskController: realizamos la validacion de los datos guardados en la variable $request
+*15TaskController: determinamos que el campo keep es obligatorio y no debe ir en blanco
+*16TaskController: CUando ya validamos llamamos a la clase Task le pedimos con find que busque el $id que traemos en el parametro del metodo y ejecutamos el metodo update al cual le pasamos los datos contenidos en la variable $request, esta variable trae todos los datos por el all() pero cuando pasa por el modelo Task*1Task.php se especifica que solo pasaran los campos que esten en calidad de fillable
+asi que solo se guardara o actualizara la información que este especificada alli en el modelo.

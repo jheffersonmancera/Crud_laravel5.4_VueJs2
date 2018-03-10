@@ -25624,9 +25624,12 @@ new Vue({
 		this.getKeeps();//*4app.js
 	},
 	data: {
+		fillKeep:{'id':'','keep':''},//*25app.js
+		errors: [],
+		newKeep: '',
 		keeps: [],//*1app.js
-		newKeep: '',//*18app.js
-		errors: []
+		//*18app.js
+		
 	},
 	methods:{
 		getKeeps: function(){//*5app.js
@@ -25634,6 +25637,26 @@ new Vue({
 			axios.get(urlKeeps).then(response =>{
 				this.keeps = response.data//*6
 			});//*3app.js
+		},
+		editKeep: function(keep){//*26app.js:
+			this.errors=[];//*39app.js:
+			this.fillKeep.id = keep.id;//*27app.js:
+			this.fillKeep.keep = keep.keep;//*28app.js:
+			$('#edit').modal('show');	//*29app.js:
+		},
+		
+		updateKeep: function(id){
+			//alert('keep ha sido editado');
+			var url ='tasks/' + id;//*30app.js:
+			axios.put(url, this.fillKeep).then(response =>{//*31app.js:
+				this.getKeeps();//*32app.js:
+				this.fillKeep = {'id':'','keep':''};//*33app.js:
+				this.errors   = [];//*34app.js:
+				$('#edit').modal('hide');//*35app.js:
+				toastr.success('Tarea actualizada con éxito');//*36app.js:
+			}).catch(error =>{//*37app.js:
+				this.errors = error.response.data//*38app.js:
+			});
 		},
 
 		deleteKeep: function(keep){ //*8app.js *9app.js 
@@ -25649,6 +25672,7 @@ new Vue({
 		},
 
 		createKeep: function(){
+			this.errors=[];
 			var url = 'tasks';      //*15app.js
 			axios.post(url,{        //*16app.js
 				keep: this.newKeep  //*17app.js

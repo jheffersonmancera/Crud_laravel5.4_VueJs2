@@ -6,10 +6,10 @@
 				<button type="button" class="close" data-dismiss="modal">
 					<span>&times;</span>
 				</button>
-				<h4>Nueva Tarea</h4>
+				<h4>Crear</h4>
 			</div>			
 			<div class="modal-body">					<!-- *5create.blade.php -->
-				<label for="keep">Crear Tarea</label>	<!-- *6create.blade.php -->
+				<label for="keep">Nueva Tarea</label>	<!-- *6create.blade.php -->
 				<input type="text" name="keep" class="form-control" v-model="newKeep"><!--*7create.blade.php -->	
 				<span v-for="error in errors" class="text-danger">@{{ error }}</span><!--*8create.blade.php -->	
 

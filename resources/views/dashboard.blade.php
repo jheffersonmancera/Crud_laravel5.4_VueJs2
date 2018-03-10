@@ -29,7 +29,7 @@
 				<td width="10px">@{{keep.id}}</td> <!-- *8dashboard.blade.php  -->
 				<td>@{{keep.keep}}</td><!-- *9dashboard.blade.php  -->
 				<td width="10px">
-					<a href="#" class="btn btn-warning btn-sm">Editar</a>
+					<a href="#" class="btn btn-warning btn-sm" v-on:click.prevent="editKeep(keep)">Editar</a><!-- *14dashboard.blade.php  -->
 				</td>
 				<td width="10px">
 					<a href="#" class="btn btn-danger btn-sm" v-on:click.prevent="deleteKeep(keep)">Eliminar</a><!-- *10dashboard.blade.php  -->
@@ -41,9 +41,14 @@
 		
 	</table>
 	@include('create') <!-- *12dashboard.blade.php -->
+	@include('edit') <!-- *13dashboard.blade.php -->
 	</div>
 	<div class="col-sm-5"> <!-- *4dashboard.blade.php -->
 		<pre>	
+			<br>
+			<br>
+			<br>
+			<br>
 			@{{ $data}} <!-- *2dashboard.blade.php -->
 		</pre>		
 	</div>
