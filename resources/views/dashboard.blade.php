@@ -40,8 +40,34 @@
 		</tbody>
 		
 	</table>
+	<nav>
+		<ul class="pagination"> <!-- *15 dashboard.blade.php  -->
+			<li v-if="pagination.current_page>1"><!-- *16 dashboard.blade.php  -->
+				<a href="#" @click.prevent="changePage(pagination.current_page - 1)"><!-- *18 dashboard.blade.php  -->
+					<span>Atrás</span>
+				</a>
+			</li>
+
+			<li v-for="page in pagesNumber" v-bind:class="[page == isActived ? 'active' : '']"><!-- *20 dashboard.blade.php  -->
+				<a href="#" @click.prevent="changePage(page)">
+					@{{page}}
+				</a>
+			</li>
+
+			<li v-if="pagination.current_page < pagination.last_page"><!-- *17 dashboard.blade.php  -->
+				<a href="#" @click.prevent="changePage(pagination.current_page + 1)"><!-- *19 dashboard.blade.php  -->
+					<span>Siguiente</span>
+				</a>
+			</li>
+		</ul>
+	</nav>
+
+
+
+
 	@include('create') <!-- *12dashboard.blade.php -->
 	@include('edit') <!-- *13dashboard.blade.php -->
+
 	</div>
 	<div class="col-sm-5"> <!-- *4dashboard.blade.php -->
 		<pre>	

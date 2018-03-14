@@ -196,7 +196,7 @@ ______________resources/assets/js/app.js_______________
 
 *3app.js this.keeps me guarda el contenido en *1app.js
 
-*4app.js: este metodo se activa en la etapa de creacion(existen varias etapas en el ciclo de vida de un objeto vue) y ejecuta el metodo getKeeps()*5app.js el metodo getkeeps me hace la conecciony me guarda todos los keeps que estan en la base de datos y *6 me los pasa a el arreglo en data *1
+*4app.js: este metodo se activa en la etapa de creacion(existen varias etapas en el ciclo de vida de un objeto vue) y ejecuta el metodo getKeeps()*5app.js el metodo getkeeps me hace la coneccion y me guarda todos los keeps que estan en la base de datos y *6app.js me los pasa a el arreglo keeps[]*1app.js response.data tenemos que entrar hasta data porque alli se encuentra la información que necesitamos del arreglo
 
 -npm run dev para ajustar cambios en el app.js
 
@@ -385,3 +385,67 @@ USO DE JQUERY PARA HACER APARECER EL FORMULARIO EN PANTALLA
 *15TaskController: determinamos que el campo keep es obligatorio y no debe ir en blanco
 *16TaskController: CUando ya validamos llamamos a la clase Task le pedimos con find que busque el $id que traemos en el parametro del metodo y ejecutamos el metodo update al cual le pasamos los datos contenidos en la variable $request, esta variable trae todos los datos por el all() pero cuando pasa por el modelo Task*1Task.php se especifica que solo pasaran los campos que esten en calidad de fillable
 asi que solo se guardara o actualizara la información que este especificada alli en el modelo.
+------------ fin de EDIT-----------------------
+
+
+------------------//PAGINACION-------------------------
+PRIMERO PROGRAMAMOS EL LISTADO DE LOS ELEMENTOS
+
+*17TaskController: realiza la consulta de toda la tabla tasks y los pagina de a 4 registros
+*18TaskController: Array que contendra otros array con la información de la paginación
+*19TaskController: Controlara los registros que hay en pantalla, devuelve la consulta hecha en *17TaskController:
+
+*20TaskController: llama al total() que es un metodo que nos provee laravel al ejecutar el metodo paginate() al igual con el resto de metodos de paginacion
+
+*40app.js: this.keeps= llena el arreglo keeps[] con lo que alla consultado axios, si ponemos response.data entrara solo hasta el arreglo data que nos contendra todos los arreglos que nos devuelve el metodo index del controlador, pero como queremos solo lo que esta paginado entramos hasta el data del arreglo tasks que solo contiene la información ya paginada
+response.data.tasks.data
+
+A CONTINUACION SE REALIZA LA PROGRAMACIÓN PARA LA PAGINACION
+
+*41app.js: array con las variables que contendran los valores de paginación
+*42app.js: llenamos el array pagination con la respuesta de axios entrando hasta el arreglo pagination(*18TaskController) lo hacemos para poder usar esa información con vue a la hora de dirigir los elementos de la vista hacia cada pagina
+
+*43app.js: devuelve el valor del arreglo pagination(*41app.js) y la variable current_page para determinar en que pagina estamos actualmente y comparar con los botones para saber si los alumbramos o no
+
+*44app.js: Si el valor de .pagination.to es 0 osea si la pagina hasta la que se esta paginando esta en 0 entonces no se imprimira nada en pantalla
+
+*45app.js: para determinar el numero desde el que empieza la numeracion (from) se le asigna primero a la var from el numero de pagina actual y se le resta un offset para determinar unos cuantos puestos que queden comodos a la numeracion nueva 
+
+*50app.js: si al hacer la resta anterior se genera un numero negativo, es decir si el numero es suficientemente pequeño como para que de negativo entonces se deduce que se va a arrancar en 1
+
+*46app.js: numero hasta el que va a  llegar la numeracion (to) 
+
+*51app.js: con este if determinamos que la numeracion no se pase del numero máximo de paginas, en caso tal de que ocurra entonces cuadramos hasta la ultima pagina
+
+*47app.js: variable array para guardar el total de paginas
+
+*21TaskController: agregamos el parametro Request al metodo para poderle pasar información mediante el metodo GET 
+
+
+*52app.js:mientras que el numero (desde) sea igual o inferior al numero (hasta) 
+*53app.js: se va guardando en el array numero por numero de pagina para poder luego colocar la secuencia en pantalla
+
+*48app.js:  el parametro resive la pagina hacia la cual se quiere ir a continuación.
+
+*49app.js alteramos el valor de la pagina actual con el de la pagina hacia la que se va para que quede actualizado el valor
+
+*50app.js: mandamos a la funcion getkeeps la pagina nueva en el parametro
+
+*54app.js: devuelve un array con cada uno de los numeros de pagina generados por (*53app.js)
+
+*15dashboard.blade.php: la clase  pagination es de bootstrap
+
+
+*16 dashboard.blade.php: como este boton solo debe aparecer cuando la pagina actual sea mayor a 1 entonces se condiciona para que solo se renderice cuando el valor de (*41app.js:) el arreglo pagination en su valor current_page se mayor a 1. o mejor dicho cuando la pagina actual sea 1.
+
+*17 dashboard.blade.php: si la pagina actual es la ultima no debe renderizars el boton de pasar pagina,
+se condiciona la renderizción para que solo imprima si el valor de pagina actual es menor el de la ultima pagina
+
+*18 dashboard.blade.php: para devolver llamamos al evento click de vue y prevent previene que la pagina se refresque, se llama al metodo changePage (*48app.js:) que espera un parametro dentro del cual mandamos el calculo de la pagina actual - 1 para determinar cual es la pagina anterior
+
+*19 dashboard.blade.php: para avanzar llamamos al evento click de vue y prevent previene que la pagina se refresque, se llama al metodo changePage (*48app.js:) que espera un parametro dentro del cual mandamos el calculo de la pagina actual + 1 para determinar cual es la pagina siguiente
+
+
+*20 dashboard.blade.php: con v-for="page in pagesNumber se imprime tantas veces se encuentren posiciones en el array devuelto por *54app.js la funcion computada pagesNumber 
+v-bind:class nos asigna una propiedad a la etiqueta,  imprimimos el resultado de una condicion ternaria, esta condicion pregunta si la variable page del for osea la pagina actual coincide con el valor devuelto por la funcion computada isActived (*43app.js) osea si el numero del boton y la pagina actual coinciden entonces imprimir dentro de la etiqueta esto 'active' que es una propiedad de bootstrap y si no es asi entonces poner '' para que no altere nada
+

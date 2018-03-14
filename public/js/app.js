@@ -25624,18 +25624,59 @@ new Vue({
 		this.getKeeps();//*4app.js
 	},
 	data: {
-		fillKeep:{'id':'','keep':''},//*25app.js
-		errors: [],
-		newKeep: '',
 		keeps: [],//*1app.js
-		//*18app.js
+		pagination: {//*41app.js:
+			'total'		  :0,
+            'current_page':0,
+            'per_page'    :0,
+            'last_page'   :0,
+            'from'        :0,
+            'to'          :0,
+		},
 		
+		errors: [],//*18app.js
+		newKeep: '',
+		fillKeep:{'id':'','keep':''},//*25app.js
 	},
+	computed: {//*43app.js
+		isActived: function(){
+			return this.pagination.current_page;//*43app.js
+		},
+		pagesNumber: function(){
+			if (!this.pagination.to){//*44app.js
+				return [];
+			}
+
+			var from = this.pagination.current_page - 2;//*45app.js TODO
+			if (from<1) {//*50app.js:
+				from = 1;
+			}
+
+			var to = from + (2*2);//*46app.js
+
+			if (to >= this.pagination.last_page) {//*51app.js
+				to=this.pagination.last_page;
+			}
+			var pagesArray =[];//*47app.js
+			while(from <= to){//*52app.js
+				pagesArray.push(from);//*53app.js
+				from++;
+			}
+			return pagesArray;
+		},
+	},
+
+	
 	methods:{
-		getKeeps: function(){//*5app.js
-			var urlKeeps = 'tasks';//*2
+		getKeeps: function(page){//*5app.js  //*49app.js
+			//var urlKeeps = 'tasks';//*2
+			var urlKeeps = 'tasks?page='+page;//*50app.js
 			axios.get(urlKeeps).then(response =>{
-				this.keeps = response.data//*6
+				//Sin Paginación
+				//this.keeps = response.data//*6app.js
+				//Con Paginación
+				this.keeps = response.data.tasks.data//*40app.js
+				this.pagination = response.data.pagination//*42app.js
 			});//*3app.js
 		},
 		editKeep: function(keep){//*26app.js:
@@ -25672,7 +25713,6 @@ new Vue({
 		},
 
 		createKeep: function(){
-			this.errors=[];
 			var url = 'tasks';      //*15app.js
 			axios.post(url,{        //*16app.js
 				keep: this.newKeep  //*17app.js
@@ -25689,7 +25729,13 @@ new Vue({
 				});
 
 
+		},
+
+		changePage: function(page){//*48app.js: 
+			this.pagination.current_page= page;//*49app.js: 
+			this.getKeeps(page);//*50app.js:
 		}
+
 
 
 	}
