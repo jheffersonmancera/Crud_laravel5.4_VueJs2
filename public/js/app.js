@@ -25635,10 +25635,11 @@ new Vue({
 		},
 		
 		errors: [],//*18app.js
+		offset: 3,
 		newKeep: '',
 		fillKeep:{'id':'','keep':''},//*25app.js
 	},
-	computed: {//*43app.js
+	computed: {
 		isActived: function(){
 			return this.pagination.current_page;//*43app.js
 		},
@@ -25647,22 +25648,24 @@ new Vue({
 				return [];
 			}
 
-			var from = this.pagination.current_page - 2;//*45app.js TODO
+			var from = this.pagination.current_page - this.offset;//*45app.js 
 			if (from<1) {//*50app.js:
 				from = 1;
 			}
 
-			var to = from + (2*2);//*46app.js
+			var to = from + (this.offset * 2);//*46app.js
 
 			if (to >= this.pagination.last_page) {//*51app.js
 				to=this.pagination.last_page;
 			}
+
 			var pagesArray =[];//*47app.js
+
 			while(from <= to){//*52app.js
 				pagesArray.push(from);//*53app.js
 				from++;
 			}
-			return pagesArray;
+			return pagesArray;//*54app.js
 		},
 	},
 
